@@ -2,6 +2,10 @@
 import { useForm, useField } from 'vee-validate';
 import { loginSchema as validationSchema } from '../validation/loginSchema'
 
+import { useAuthStore } from '../store/auth'
+
+const auth = useAuthStore()
+
 const { handleSubmit } = useForm({
     validationSchema,
 });
@@ -9,8 +13,8 @@ const { handleSubmit } = useForm({
 const email = useField('email');
 const password = useField('password');
 
-const submit = handleSubmit(() => {
-    console.log('submit');
+const submit = handleSubmit((values) => {
+    auth.login(values)
 });
 
 </script>
@@ -25,16 +29,14 @@ const submit = handleSubmit(() => {
             Inicia Sesión con tu cuenta
         </v-card-subtitle>
 
-        <v-form class="mt-5">
-            <v-text-field 
-            class="mb-3"
-            type="email" label="Email" bg-color="blue-grey-lighten-5" v-model="email.value.value"
-                :error-messages="email.errorMessage.value" />
+        <v-alert v-if="auth.hasError" class="my-5" :title="auth.errorMessage" type="error" variant="tonal"></v-alert>
 
-            <v-text-field 
-            class="mb-3"
-            type="password" label="Password" bg-color="blue-grey-lighten-5" v-model="password.value.value"
-                :error-messages="password.errorMessage.value" />
+        <v-form class="mt-5">
+            <v-text-field class="mb-3" type="email" label="Email" bg-color="blue-grey-lighten-5"
+                v-model="email.value.value" :error-messages="email.errorMessage.value" />
+
+            <v-text-field class="mb-3" type="password" label="Password" bg-color="blue-grey-lighten-5"
+                v-model="password.value.value" :error-messages="password.errorMessage.value" />
 
             <v-btn block color="pink-accent-3" @click="submit">
                 Iniciar Sesión
