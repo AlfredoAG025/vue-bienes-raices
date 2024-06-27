@@ -2,7 +2,7 @@
 import { useForm, useField } from 'vee-validate';
 import { loginSchema as validationSchema } from '../validation/loginSchema'
 
-import { useAuthStore } from '../store/auth'
+import { useAuthStore } from '../stores/auth'
 
 const auth = useAuthStore()
 
