@@ -18,6 +18,9 @@ import router from "./router";
 import "./assets/main.css";
 import "@mdi/font/css/materialdesignicons.css";
 
+// Leaflet
+import "leaflet/dist/leaflet.css";
+
 const app = createApp(App);
 
 // Vuetify

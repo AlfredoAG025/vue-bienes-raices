@@ -1,20 +1,23 @@
 <script setup>
-import { ref } from 'vue';
 import { useForm, useField } from 'vee-validate';
 import { validationSchema, imageSchema } from '@/validation/propiedadSchema';
+
+import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+
 import { collection, addDoc } from 'firebase/firestore';
+
 import { useFirestore } from 'vuefire';
 import { useRouter } from 'vue-router';
-
 import useImage from '@/composables/useImage';
+import useLocationMap from '@/composables/useLocationMap';
 
-import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
 
 const db = useFirestore();
 const router = useRouter();
 
-const zoom = ref(15);
+const  { zoom, center, pin } = useLocationMap();
+
+
 const items = [1, 2, 3, 4, 5];
 
 const { url, uploadImage, image } = useImage();
@@ -43,6 +46,7 @@ const submit = handleSubmit(async (values) => {
     const docRef = await addDoc(collection(db, 'propiedades'), {
         ...propiedad,
         imagen: url.value,
+        ubicacion: center.value,
     });
 
     if (docRef.id) {
@@ -100,10 +104,20 @@ const submit = handleSubmit(async (values) => {
 
             <v-checkbox label="Alberca" v-model="alberca.value.value" :error-messages="alberca.errorMessage.value" />
 
-            <l-map ref="map" v-model:zoom="zoom" :center="[47.41322, -1.219482]" :use-global-leaflet="false">
-                <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base"
-                    name="OpenStreetMap"></l-tile-layer>
-            </l-map>
+            <h2 class="font-weight-bold text-center my-5">Ubicación</h2>
+
+            <div class="pb-10">
+                <div style="height:600px;">
+                    <LMap  v-model:zoom="zoom" :center="center" :use-global-leaflet="false">
+                        <LMarker 
+                        :lat-lng="center"
+                        draggable
+                        @moveend="pin"
+                        />
+                        <LTileLayer url="https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png"></LTileLayer>
+                    </LMap>
+                </div>
+            </div>
 
             <v-btn @click="submit" color="pink-accent-3" block>
                 Agregar Propiedad
