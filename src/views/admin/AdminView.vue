@@ -1,7 +1,8 @@
 <script setup>
 import usePropiedades from '@/composables/usePropiedades';
+import { propertyPrice } from '@/helpers';
 
-const { propiedadesCollection, propertyPrice } = usePropiedades();
+const { propiedadesCollection } = usePropiedades();
 </script>
 
 <template>
@@ -25,7 +26,8 @@ const { propiedadesCollection, propertyPrice } = usePropiedades();
                 <v-list-item-subtitle>{{ propertyPrice(propiedad.precio) }}</v-list-item-subtitle>
 
                 <template v-slot:append>
-                    <v-btn color="info" variant="flat" class="mr-2">
+                    <v-btn :to="{ name: 'editar-propiedad', params: { id: propiedad.id } }" color="info" variant="flat"
+                        class="mr-2">
                         Editar
                     </v-btn>
                     <v-btn color="red-darken-3" variant="flat">

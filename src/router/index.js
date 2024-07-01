@@ -20,6 +20,11 @@ const router = createRouter({
 			component: () => import("../views/LoginView.vue"),
 		},
 		{
+			path: "/propiedades/:id",
+			name: "propiedad",
+			component: () => import("../views/PropiedadView.vue"),
+		},
+		{
 			path: "/admin",
 			name: "admin",
 			component: () => import("../views/admin/AdminLayout.vue"),
